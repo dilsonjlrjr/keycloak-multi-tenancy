@@ -3,6 +3,7 @@ import Keycloak, { KeycloakConfig, KeycloakInstance } from "keycloak-js";
 interface IKeycloakManager {
   getInstance: (realm: string) => KeycloakInstance | undefined;
   createInstance: (realm: string, config: KeycloakConfig) => void;
+  getActiveInstance: () => void;
   initManager: (callback: Function) => void;
   login: (realm: string) => void;
   logout: (realm: string) => void;
@@ -13,6 +14,20 @@ let keyCloakInstance: Map<string, KeycloakInstance> = new Map();
 const KeycloakManager: IKeycloakManager = {
   getInstance: (realm: string) => {
     return keyCloakInstance.get(realm);
+  },
+
+  getActiveInstance: () => {
+    let hasKeycloakInstanceActive = "";
+
+    keyCloakInstance.forEach((instance, key) => {
+      if (instance.sessionId) {
+        hasKeycloakInstanceActive = key;
+      }
+    });
+
+    if (hasKeycloakInstanceActive !== "")
+      return keyCloakInstance.get(hasKeycloakInstanceActive);
+    else return undefined;
   },
 
   createInstance: (realm: string, config: KeycloakConfig) => {

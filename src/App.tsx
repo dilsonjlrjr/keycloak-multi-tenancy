@@ -25,6 +25,10 @@ const App: FC = () => {
   };
 
   useEffect(() => {
+    console.log(
+      "[DEBUG] Instance Keycloak Active:",
+      KeycloakManager.getActiveInstance()
+    );
     setAuthenticateRealm1(KeycloakManager.getInstance("realm1")?.authenticated);
     setAuthenticateRealm2(KeycloakManager.getInstance("realm2")?.authenticated);
   }, []);
